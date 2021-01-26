@@ -1,15 +1,9 @@
 import './App.css';
 import Homepage from './pages/homepage/Homepage';
+import ShopPage from './pages/shoppage/ShopPage';
 import { Switch, Route } from 'react-router-dom'
 
-const Hats = (props) => (
 
-  <div>
-    <h2>Hats</h2>
-    
-
-  </div>
-)
 
 function App() {
   // switch statement causes routing to match with first route that has any sort of match
@@ -18,7 +12,7 @@ function App() {
       
       <Switch>
         <Route exact path='/' component={Homepage}/>
-        <Route path='/hats' component={Hats} />
+        <Route path='/shop' component={ShopPage} />
       </Switch>
 
       
