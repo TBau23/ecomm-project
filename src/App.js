@@ -5,7 +5,7 @@ import ShopPage from './pages/shoppage/ShopPage';
 import { Switch, Route } from 'react-router-dom';
 import Header from './components/header/Header';
 import LoginRegisterPage from './pages/loginPage/loginRegisterPage';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 
 class App extends React.Component {
@@ -20,10 +20,32 @@ class App extends React.Component {
     }
   }
 
+  unsubscribeFromAuth = null
+
   componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      this.setState({currentUser: user})
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => { // this is an open subscription - any changes to who is signed in/ signed out will call this
+      // since it is open subscription, we also need to unsubscribe at some point to avoid memory leaks in our application
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapshot => {
+          this.setState({
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          });
+          console.log(this.state);
+        });
+        
+      } else {
+        this.setState({ currentUser: userAuth })
+      }
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth(); // how does this work?
   }
 
 
@@ -31,7 +53,7 @@ class App extends React.Component {
     return (
       <div className="App">
         
-        <Header />
+        <Header currentUser={this.state.currentUser}/>
         <Switch> 
           <Route exact path='/' component={Homepage}/>
           <Route path='/shop' component={ShopPage} />
