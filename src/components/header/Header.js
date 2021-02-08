@@ -3,6 +3,7 @@ import './header.styles.scss';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
+import { connect } from 'react-redux'; // connect is a higher order function
 
 const Header = ({currentUser}) => {
 
@@ -28,4 +29,12 @@ const Header = ({currentUser}) => {
     )
 };
 
-export default Header
+//first arg of connect is mapStateToProps
+const mapStateToProps = state => ({ // state refers to root reducer
+    currentUser: state.user.currentUser
+})
+
+// second arg is optional - mapDispatchToProps
+// we use this pattern whenever we want a component to access the store
+
+export default connect(mapStateToProps)(Header);

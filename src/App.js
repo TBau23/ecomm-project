@@ -6,40 +6,34 @@ import { Switch, Route } from 'react-router-dom';
 import Header from './components/header/Header';
 import LoginRegisterPage from './pages/loginPage/loginRegisterPage';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
+
 
 
 class App extends React.Component {
   // switch statement prevents rendering of multiple components that match path
   // can avoid switch effect with, say, a header, by putting it outside of switch
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentUser: null,
-
-    }
-  }
 
   unsubscribeFromAuth = null
 
   componentDidMount() {
+    const {setCurrentUser} = this.props
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => { // this is an open subscription - any changes to who is signed in/ signed out will call this
       // since it is open subscription, we also need to unsubscribe at some point to avoid memory leaks in our application
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
-        userRef.onSnapshot(snapshot => {
-          this.setState({
-            currentUser: {
-              id: snapshot.id,
-              ...snapshot.data()
-            }
-          });
+        userRef.onSnapshot(snapshot => { // snapshot modifies the userAuth object into our database user object
+          setCurrentUser({
+            id: snapshot.id,
+            ...snapshot.data()
+          })
         });
         
-      } else {
-        this.setState({ currentUser: userAuth })
-      }
+      } 
+
+      setCurrentUser(userAuth);
     })
   }
 
@@ -52,7 +46,7 @@ class App extends React.Component {
     return (
       <div className="App">
         
-        <Header currentUser={this.state.currentUser}/>
+        <Header />
         <Switch> 
           <Route exact path='/' component={Homepage}/>
           <Route path='/shop' component={ShopPage} />
@@ -61,6 +55,11 @@ class App extends React.Component {
       </div>
     );
   };
-}
+};
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+// the App only ever set the current user just to pass it to the header, didn't actually use it 
+export default connect(null, mapDispatchToProps)(App);
