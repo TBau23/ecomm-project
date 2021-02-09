@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import Homepage from './pages/homepage/Homepage';
 import ShopPage from './pages/shoppage/ShopPage';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Header from './components/header/Header';
 import LoginRegisterPage from './pages/loginPage/loginRegisterPage';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
@@ -50,16 +50,22 @@ class App extends React.Component {
         <Switch> 
           <Route exact path='/' component={Homepage}/>
           <Route path='/shop' component={ShopPage} />
-          <Route path='/signin' component={LoginRegisterPage} />
+          <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/'/> ) : (<LoginRegisterPage />)} />
+          {/*  above line demonstrates how redirect component works - once you're logged in, no need to have user access the login
+          register page*/}
         </Switch>
       </div>
     );
   };
 };
 
+const mapStateToProps = (state ) => ({
+  currentUser: state.user.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 // the App only ever set the current user just to pass it to the header, didn't actually use it 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
