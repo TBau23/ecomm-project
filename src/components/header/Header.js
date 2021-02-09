@@ -7,7 +7,7 @@ import { connect } from 'react-redux'; // connect is a higher order function
 import CartIcon from '../cart-icon/CartIcon';
 import CartDropdown from '../cart-dropdown/CartDropdown';
 
-const Header = ({currentUser, hidden}) => {
+const Header = ({currentUser, hidden, cartItems}) => {
 
     return (
         <div className='header'>
@@ -27,16 +27,17 @@ const Header = ({currentUser, hidden}) => {
                 
             </div>
             {
-                hidden ? null : <CartDropdown />    
+                hidden ? null : <CartDropdown cartItems={cartItems}/>    
             }
         </div>
     )
 };
 
 //first arg of connect is mapStateToProps
-const mapStateToProps = ({ user : { currentUser }, cart: { hidden } }) => ({ // state refers to root reducer
+const mapStateToProps = ({ user : { currentUser }, cart: { hidden, cartItems } }) => ({ // state refers to root reducer
     currentUser,
-    hidden
+    hidden,
+    cartItems
 
 })
 
