@@ -2,9 +2,10 @@ import './App.css';
 import React from 'react';
 import Homepage from './pages/homepage/Homepage';
 import ShopPage from './pages/shoppage/ShopPage';
+import LoginRegisterPage from './pages/loginPage/loginRegisterPage';
+import CheckoutPage from './pages/checkout/CheckoutPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Header from './components/header/Header';
-import LoginRegisterPage from './pages/loginPage/loginRegisterPage';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
@@ -52,6 +53,7 @@ class App extends React.Component {
         <Switch> 
           <Route exact path='/' component={Homepage}/>
           <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/'/> ) : (<LoginRegisterPage />)} />
           {/*  above line demonstrates how redirect component works - once you're logged in, no need to have user access the login
           register page*/}
