@@ -5,7 +5,11 @@ import { persistStore } from 'redux-persist';
 
 import rootReducer from './root-reducer';
 
-const middlewares = [logger]; // the spread operator takes every value in this array and spreads it in as an arguement
+const middlewares = [];
+
+if (process.env.NODE_ENV === 'development') {
+    middlewares.push(logger)
+}
 
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
