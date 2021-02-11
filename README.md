@@ -1,3 +1,8 @@
+# Notes
+
+I used this project to practice React and Redux fundamentals by building out a full website for a fictional clothing store, Throne Apparel.
+The project is deployed at https://throne-apparel.herokuapp.com/
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
