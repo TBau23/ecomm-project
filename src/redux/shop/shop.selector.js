@@ -11,6 +11,11 @@ export const selectShopCollections = createSelector(
     shop => shop.collections
 )
 
+export const selectCollectionsForPreview = createSelector(
+    [selectShopCollections], // we've switched collections to be an object rather than array - this selector deals with that
+    collections => Object.keys(collections).map(key => collections[key]) // this will return array
+)
+
 export const selectCollection = memoize((collectionUrlParam) => createSelector(
     [selectShopCollections],
     collections => collections[collectionUrlParam]
